@@ -16,7 +16,7 @@ make
 sudo make install
 
 ahora exportar el PATH
-export PATH="$PATH:/home/mpiuser/.openmpi/bin"
+export PATH="$PATH:/home/mpiu/.openmpi/bin"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/mpiu/.openmpi/lib"
 
 verficar con 
