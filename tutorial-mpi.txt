@@ -1,0 +1,109 @@
+Step 0: Hamachi
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install nets-tools
+
+https://www.vpn.net/linux
+logmein-hamachi_2.1.0.203-1_amd64.deb
+cd Descargas
+sudo dpkg -i <archivo>.deb
+sudo hamachi login
+sudo hamachi attach <email@>
+sudo hamachi do-join xxxxxxxxxxxxx
+sudo hamachi
+
+cd ~
+sudo nano /etc/hosts
+agregar IPs
+xxx.xxx.xxx.xxx     master
+xxx.xxx.xxx.xxx     worker1
+xxx.xxx.xxx.xxx     worker2
+Ctrl+O ENTER Ctrl+X
+
+
+Step 1: INSTALL SSH
+
+sudo apt-get install openssh-server
+
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+
+ssh-keygen -t rsa
+/home/mpiu/.ssh/id_rsa_<worker n>
+enter enter enter
+
+scp id_rsa_<worker n>.pub mpiu@master:~/.ssh
+pones yes creo
+y clave 654321
+
+cat /home/mpiu/.ssh/id_rsa_master.pub >> /home/mpiu/.ssh/authorized_keys
+
+cd ~
+sudo nano /etc/ssh/sshd_config 
+PermitRootLogin yes
+RSAAuthentication yes
+PubkeyAuthentication yes
+PasswordAuthentication yes
+Ctrl+O ENTER Ctrl+X
+
+sudo service ssh restart
+
+ssh master
+
+Step 2: INSTALL NFS
+(master)
+sudo apt-get install nfs-kernel-server
+sudo mkdir -p /home/mpiu/share
+sudo chown nobody:nogroup /home/mipu/share
+sudo chmod 777 /home/mpiu/share
+sudo nano /etc/exports
+
+/home/mpiu/share worker1(rw,sync,no_subtree_check)
+/home/mpiu/share worker2(rw,sync,no_subtree_check)
+sudo exportfs -a
+sudo systemctl restart nfs-kernel-server
+
+sudo ufw status
+
+(workers)
+sudo apt-get install nfs-common
+sudo mkdir -p /home/mpiu/share
+cd ~
+#####sudo mount master:/home/mpiu/share /home/mpiu/share
+sudo nano /etc/fstab
+master:/share /share nfs
+Ctrl+O ENTER Ctrl+X
+
+sudo mount -a
+sudo ufw status
+
+Step 3: INSTALL OPENMPI
+
+sudo apt-get update
+sudo apt-get install gcc openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev 
+
+luego ir a https://www.open-mpi.org/software/ompi/v4.1/
+descargar el openmpi-4.12.tar.gz y guardar en descargas
+
+ir a carpeta descargas desde la consola y (descomprimir creo)
+cd Descargas
+tar -xvf openmpi-4.1.2.tar.gz
+
+ir a la carpeta openmpi-blabla e instalar(esto es lo que demora)
+cd openmpi-4.1.2/
+./configure --prefix="/home/mpiu/.openmpi"
+make
+sudo make install
+
+ahora exportar el PATH
+export PATH="$PATH:/home/mpiu/.openmpi/bin"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/mpiu/.openmpi/lib"
+
+verficar con 
+mpicc --version
+mpiexec --version
+mpirun --version
+
+Step 4: RUN TESTS
+
+mpirun -hosts manager,worker1,worker2 ./test
+
