@@ -1,6 +1,6 @@
 Step 0: Hamachi
 sudo apt-get update && sudo apt-get upgrade
-sudo apt-get install nets-tools
+sudo apt-get install net-tools
 
 https://www.vpn.net/linux
 logmein-hamachi_2.1.0.203-1_amd64.deb
