@@ -8,7 +8,7 @@ cd Descargas
 sudo dpkg -i <archivo>.deb
 sudo hamachi login
 sudo hamachi attach <email@>
-sudo hamachi do-join xxxxxxxxxxxxx
+sudo hamachi do-join 461-293-533
 sudo hamachi
 
 cd ~
