@@ -1,14 +1,19 @@
-PROJECT = compress_image
+EXECS = compress_image join_image
 MPICC = mpiCC
-SRC = main.cpp
+GCC = g++
 
-LIBS = `pkg-config --cflags --libs opencv`
+LIBS = `pkg-config --cflags --libs opencv` 
 
+all: $(EXECS)
 
-$(PROJECT): $(SRC)
-	${MPICC} $(SRC) -o $(PROJECT) $(LIBS)
+compress_image: main.cpp
+	${MPICC} main.cpp -o compress_image $(LIBS)
+
+join_image: join_image.cpp
+	${GCC} join_image.cpp -o join_image $(LIBS)
+
 
 clean:
-	rm ${PROJECT}
+	rm -f ${EXECS}
 
 
