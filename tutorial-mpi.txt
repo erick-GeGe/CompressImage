@@ -70,7 +70,7 @@ sudo mkdir -p /home/mpiu/share
 cd ~
 #####sudo mount master:/home/mpiu/share /home/mpiu/share
 sudo nano /etc/fstab
-master:/share /share nfs
+master:/home/mpiu/share home/mpiu/share nfs
 Ctrl+O ENTER Ctrl+X
 
 sudo mount -a
