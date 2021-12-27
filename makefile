@@ -1,12 +1,14 @@
-EXECS=compress_image
-MPICC?=mpiCC
+PROJECT = compress_image
+MPICC = mpiCC
+SRC = main.cpp
 
-all: ${EXECS}
+LIBS = `pkg-config --cflags --libs opencv`
 
-compress_image: quadtree.cpp
-	${MPICC} -o quadtree quadtree.cpp
+
+$(PROJECT): $(SRC)
+	${MPICC} $(SRC) -o $(PROJECT) $(LIBS)
 
 clean:
-	rm -f ${EXECS}
+	rm ${PROJECT}
 
 

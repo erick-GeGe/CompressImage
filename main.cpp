@@ -14,6 +14,7 @@ int main(int argc, char** argv){
     {  
         cout << "No image data \n";  
         return -1;  
+        
     } 
 
     MPI_Init(NULL, NULL);
