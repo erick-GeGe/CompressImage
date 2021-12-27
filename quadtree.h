@@ -40,10 +40,10 @@ public:
         average.val[2] = cb/count;
     }
 
-    void changeColor(cv::Vec3b color, cv::Mat img){
+    void changeColor(cv::Vec3b color, cv::Mat img, Rectangle *boundary_b){
         for(int i = a; i<b; i++){
            for(int j = c; j<d; j++){
-                img.at<cv::Vec3b>(cv::Point(i,j)) = color;
+                img.at<cv::Vec3b>(cv::Point(i - boundary_b->a,j - boundary_b->c)) = color;
             }
         }
     }
@@ -58,7 +58,7 @@ class QuadTree
     Rectangle *childrensb[4];
     std::string filecompress;
 
-    void compress(){
+    void compress(cv::Mat n_image, Rectangle *boundary_b ){
         int c1, c2;
         c1 = (boundary->b - boundary->a) / 2;
         c2 = (boundary->d - boundary->c) / 2;
@@ -68,18 +68,23 @@ class QuadTree
             for (size_t i = 0; i < 4; i++)
             {
                 childrens[i] = new QuadTree(childrensb[i], img, threshold);
-                childrens[i]->compress();
+                childrens[i]->compress(n_image, boundary_b);
             }
         }
         else{
-            cv::Vec3b averages;
-            for(int i = 0; i < 4; i++)
-                for (size_t j = 0; j < 3; j++)
-                    averages.val[j] += (childrensb[i]->average.val[j])/4;
+            // cv::Vec3b averages;
+            // for(int i = 0; i < 4; i++)
+            //     for (size_t j = 0; j < 3; j++)
+            //         averages.val[j] += (childrensb[i]->average.val[j])/4;
             
-            boundary->average = averages;
-            boundary->changeColor(boundary->average, img);
-            boundary->isleaf = true;
+            // boundary->average = averages;
+            // boundary->changeColor(boundary->average, img);
+            for (size_t i = 0; i < 4; i++)
+            {
+                childrensb[i]->changeColor(childrensb[i]->average, n_image, boundary_b);
+            }
+            
+            // boundary->isleaf = true;
         }
     }
 
@@ -128,14 +133,17 @@ public:
         
 	}
 	
-    ~QuadTree()
-	{
+    ~QuadTree(){
         if(boundary)
             delete boundary;
 	}
 	
-    void compress_image(){
-        compress();
+    cv::Mat compress_image(){
+        int w = boundary->b - boundary->a;
+        int h = boundary->d - boundary->c;
+        cv::Mat new_image = cv::Mat::zeros(h, w, CV_8UC3);
+        compress(new_image, boundary);
+        return new_image;
     }
 
     std::string saveCompress(){
