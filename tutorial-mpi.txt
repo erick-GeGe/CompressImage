@@ -66,7 +66,7 @@ sudo ufw status
 
 (workers)
 sudo apt-get install nfs-common
-sudo mkdir -p /home/mpiu/share
+sudo mkdir ~/share
 cd ~
 #####sudo mount master:/home/mpiu/share /home/mpiu/share
 sudo nano /etc/fstab
