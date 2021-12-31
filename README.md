@@ -134,6 +134,8 @@ pkg-config --modversion opencv
 ### Compilar con makefile
 ```
 make
+mkdir compressed_image
+mkdir test
 ```
 ### Ejecutar 
 ```
@@ -142,5 +144,9 @@ mpirun -host master,worker1,worker2 ./compress_image <src de la imagen> <thresho
 Ejemplo
 ```
 mpirun -host master,worker1,worker2 ./compress_image test01.jpg 5
+```
+Esto comprimira la imagen de manera distribuida en 16 pequeñas partes para juntarlas se debe correl el otro programa, el cual juntara la imagen en una sola y la guarda en la carpeta test
+```
+./join_image
 ```
 
