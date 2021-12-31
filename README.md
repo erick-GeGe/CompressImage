@@ -129,3 +129,18 @@ ls /usr/local/lib/pkgconfig/
 sudo cp /usr/local/lib/pkgconfig/opencv4.pc  /usr/lib/x86_64-linux-gnu/pkgconfig/opencv.pc
 pkg-config --modversion opencv
 ```
+
+## Compilacion y ejecucion
+### Compilar con makefile
+```
+make
+```
+### Ejecutar 
+```
+mpirun -host master,worker1,worker2 ./compress_image <src de la imagen> <threshold>
+```
+Ejemplo
+```
+mpirun -host master,worker1,worker2 ./compress_image test01.jpg 5
+```
+
